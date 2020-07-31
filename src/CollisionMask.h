@@ -5,9 +5,17 @@
 #include <type_traits>
 #include "Application.h"
 
+<<<<<<< HEAD
 namespace Fastboi {
 
     enum class CollisionLayer {
+=======
+namespace Fastboi 
+{
+
+    enum class CollisionLayer 
+    {
+>>>>>>> 445fa0f100c23a73d20d21451bee3945ff46f5ce
     
         ALL = 1,
         WALLS = 2,
@@ -21,14 +29,24 @@ namespace Fastboi {
 
     struct CollisionMask {
         private:
+<<<<<<< HEAD
 
          std::underlying_type_t<CollisionLayer> inclusions = CollisionLayer::ALL;
+=======
+    
+         std::underlying_type_t inclusions = CollisionLayer;
+>>>>>>> 445fa0f100c23a73d20d21451bee3945ff46f5ce
 
         public:
       
         CollisionLayer layer;
         
+<<<<<<< HEAD
         constexpr CollisionMask(CollisionLayer layer) : layer(layer) {
+=======
+        constexpr CollisionMask(CollisionLayer layer) : layer(layer) 
+        {
+>>>>>>> 445fa0f100c23a73d20d21451bee3945ff46f5ce
             
             if (layer == CollisionLayer::ALL || layer == CollisionLayer::NONE)
                 Application::ThrowRuntimeException("CollisionMask layer can't be ALL or NONE.", Application::INVALID_COL_LAYER);
@@ -36,7 +54,8 @@ namespace Fastboi {
 
         template<typename... EnumClass>
         requires std::same_as<std::common_type_t<EnumClass...>, CollisionLayer>
-        CollisionMask& Include(EnumClass... layers) {
+        CollisionMask& Include(EnumClass... layers) 
+         {
             using CT = std::common_type_t<EnumClass...>;
             using UT = std::underlying_type_t<CT>;
 
@@ -58,7 +77,12 @@ namespace Fastboi {
 
         template<typename... EnumClass>
         requires std::same_as<std::common_type_t<EnumClass...>, CollisionLayer>
+<<<<<<< HEAD
         CollisionMask& Exclude(EnumClass... layers) { 
+=======
+        CollisionMask& Exclude(EnumClass... layers) 
+        { 
+>>>>>>> 445fa0f100c23a73d20d21451bee3945ff46f5ce
             if (inclusions == CollisionLayer::NONE) return *this;
 
             using CT = std::common_type_t<EnumClass...>;
@@ -85,12 +109,14 @@ namespace Fastboi {
             return *this;
         }
 
-        CollisionMask& Clear() {
+        CollisionMask& Clear() 
+        { //set all the layers to be nothing nada not anymore
             inclusions = CollisionLayer::NONE;
 
             return *this;
         }
 
+// will a and b collide?
         static bool CanCollide(const CollisionMask& a, const CollisionMask& b);
 
         private:
