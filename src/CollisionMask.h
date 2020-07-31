@@ -5,8 +5,12 @@
 #include <type_traits>
 #include "Application.h"
 
-namespace Fastboi {
-    enum class CollisionLayer {
+namespace Fastboi 
+{
+    //Things that can be collided with
+    enum class CollisionLayer 
+    {
+        //why not just 1-8?
         ALL = 1,
         WALLS = 2,
         PLAYER = 4,
@@ -18,20 +22,31 @@ namespace Fastboi {
     };
 
     struct CollisionMask {
-        private:
-        CollisionLayer inclusions = CollisionLayer::ALL;
+       // private:
+        //error is here
+        //inclusions is equal to the layer ALL
+         //CollisionLayer inclusions = CollisionLayer::ALL;
 
         public:
+        CollisionLayer inclusions = CollisionLayer::ALL;
         CollisionLayer layer;
         
-        constexpr CollisionMask(CollisionLayer layer) : layer(layer) {
-            if (layer == CollisionLayer::ALL || layer == CollisionLayer::NONE)
-                Application::ThrowRuntimeException("CollisionMask layer can't be ALL or NONE.", Application::INVALID_COL_LAYER);
+        constexpr CollisionMask(CollisionLayer layer) : layer(layer) 
+        {
+            //Wait why wouldn't it be all AND none because you can't be both at the same time
+            //or are we talking logicial equivalences here?
+
+             if (layer == inclusions && layer == CollisionLayer::NONE)
+                Application::ThrowRuntimeException("CollisionMask layer can't be ALL and NONE.", Application::INVALID_COL_LAYER);
+            
+            //if (layer == CollisionLayer::ALL || layer == CollisionLayer::NONE)
+                //Application::ThrowRuntimeException("CollisionMask layer can't be ALL or NONE.", Application::INVALID_COL_LAYER);
         };
 
         template<typename... EnumClass>
         requires std::same_as<std::common_type_t<EnumClass...>, CollisionLayer>
-        CollisionMask& Include(EnumClass... layers) {
+        CollisionMask& Include(EnumClass... layers) //layers is a passed in variable 
+         {
             using CT = std::common_type_t<EnumClass...>;
             using UT = std::underlying_type_t<CT>;
 
@@ -53,7 +68,8 @@ namespace Fastboi {
 
         template<typename... EnumClass>
         requires std::same_as<std::common_type_t<EnumClass...>, CollisionLayer>
-        CollisionMask& Exclude(EnumClass... layers) {
+        CollisionMask& Exclude(EnumClass... layers) 
+        { // *! I swear to god Dylan the fact that you don''t put this on a newline infuriates me
             if (inclusions == CollisionLayer::NONE) return *this;
 
             using CT = std::common_type_t<EnumClass...>;
@@ -80,15 +96,47 @@ namespace Fastboi {
             return *this;
         }
 
-        CollisionMask& Clear() {
+        CollisionMask& Clear() 
+        { //set all the layers to be nothing nada not anymore
             inclusions = CollisionLayer::NONE;
 
             return *this;
         }
 
+// will a and b collide?
         static bool CanCollide(const CollisionMask& a, const CollisionMask& b);
 
         private:
         bool CanCollide(CollisionLayer layer) const;
     };
 }
+
+/*
+
+           o
+          o    |
+           \   |
+            \  |
+             \.|-.
+             (\|  )
+    .==================.
+    | .--------------. |
+    | |::.::.::.::.::| |
+    | |'::'::'::'::':| |
+    | |::.::.::.::.::| |
+    | |:'::'::'::'::'| |
+    | |::.::.::.::.::| |
+    | '--------------'o|
+    | LI LI """""""   o|
+    |==================|
+jgs |  .------------.  |
+    | /              \ |
+    |/                \|
+    "                  "
+
+
+    you're welcome via the ascii art archive
+
+
+
+*/
